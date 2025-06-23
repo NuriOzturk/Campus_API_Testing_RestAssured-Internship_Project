@@ -61,5 +61,12 @@ public class States extends ParentPage {
 
     @Test(dependsOnMethods = "updateState")
     public void deleteState() {
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete("/school-service/api/states/" + ConfigReader.getProperty("statesID"))
+                .then()
+                .statusCode(200)
+                .assertThat().time(lessThan(1000L));
     }
 }
