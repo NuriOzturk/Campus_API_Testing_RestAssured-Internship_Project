@@ -36,9 +36,11 @@ public class ParentPage {
 
         String token = response.jsonPath().getString("access_token");
 
+
         reqSpec = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
                 .addHeader( "Authorization", "Bearer " + token)
                 .build();
+        ConfigReader.updateProperty("token", token);
     }
 }
