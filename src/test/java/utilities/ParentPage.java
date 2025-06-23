@@ -4,6 +4,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import net.datafaker.Faker;
 import org.testng.annotations.*;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import static io.restassured.RestAssured.*;
 
 public class ParentPage {
     public RequestSpecification reqSpec;
+    public Faker faker=new Faker();
 
     @BeforeClass
     public void setUp() {
@@ -32,7 +34,7 @@ public class ParentPage {
                         .post("/auth/login");
         response.then().statusCode(200);
 
-        String token = ConfigReader.getProperty("bearerToken");
+        String token = response.jsonPath().getString("access_token");
 
         reqSpec = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
