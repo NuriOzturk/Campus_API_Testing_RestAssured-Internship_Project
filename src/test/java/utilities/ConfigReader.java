@@ -74,9 +74,18 @@ public class ConfigReader {
                 String incidentID = id;
                 properties.setProperty(keyword, incidentID);
                 break;
-                case "token":
+            case "token":
                 String token = id;
                 properties.setProperty(keyword, token);
+                break;
+            case "schoolID":
+                String schoolID = id;
+                properties.setProperty(keyword, schoolID);
+                break;
+            case "examID":
+                String examID= id;
+                properties.setProperty(keyword,examID);
+                break;
         }
 
         FileOutputStream outputFile = null;
