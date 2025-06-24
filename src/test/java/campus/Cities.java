@@ -3,10 +3,8 @@ package campus;
 import utilities.ConfigReader;
 import utilities.ParentPage;
 import org.testng.annotations.*;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -36,7 +34,6 @@ public class Cities extends ParentPage {
                         .assertThat().time(lessThan(1000L))
                         .log().body()
                         .extract().path("id");
-
         ConfigReader.updateProperty("citiesID", citiesId);
     }
 

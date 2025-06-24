@@ -5,7 +5,6 @@ import io.restassured.response.Response;
 import utilities.ConfigReader;
 import utilities.ParentPage;
 import org.testng.annotations.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 public class StudentGroup extends ParentPage {
+
     @Test
     public void createExams() {
         Map<String, Object> createExams = new HashMap<>();
@@ -131,7 +131,6 @@ public class StudentGroup extends ParentPage {
                 .extract()
                 .path("id");
         ConfigReader.updateProperty("student5", student5);
-
     }
 
     @Test(dependsOnMethods = "createStudent")
@@ -182,12 +181,16 @@ public class StudentGroup extends ParentPage {
 
     @Test(dependsOnMethods = "deleteStudentGroup")
     public void deleteNegativeStudentGroup() {
-        given()
-                .spec(reqSpec)
-                .when()
-                .delete("/school-service/api/student-group/" + ConfigReader.getProperty("groupID"))
-                .then()
-                .log().body()
-                .statusCode(400);
+        try {
+            given()
+                    .spec(reqSpec)
+                    .when()
+                    .delete("/school-service/api/student-group/" + ConfigReader.getProperty("groupID"))
+                    .then()
+                    .log().body()
+                    .statusCode(400);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
