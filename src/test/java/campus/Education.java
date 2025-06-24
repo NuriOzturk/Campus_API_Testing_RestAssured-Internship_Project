@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.lessThan;
 
 public class Education extends ParentPage {
 
@@ -33,7 +32,6 @@ public class Education extends ParentPage {
 
                         .when()
                         .get("/school-service/api/subjects/646cb816433c0f46e7d44cb0/tenant/" + ConfigReader.getProperty("schoolID") + "/school/keyvalue");
-
         response.then().statusCode(200).log().body();
         JsonPath jsonPath = response.jsonPath();
         education1 = jsonPath.getString("[0].id");
@@ -54,7 +52,7 @@ public class Education extends ParentPage {
         addEducation.put("gradeCategoriesTemplateId", ConfigReader.getProperty("gradeCategoriesTemplateId"));
         addEducation.put("gradeCategoryId", ConfigReader.getProperty("gradeCategoryId"));
 
-        String educationStandartID =
+        String educationStandardID =
                 given()
                         .spec(reqSpec)
                         .body(addEducation)
@@ -67,9 +65,7 @@ public class Education extends ParentPage {
 
                         .log().body()
                         .extract().path("id");
-
-        ConfigReader.updateProperty("educationStandartID", educationStandartID);
-
+        ConfigReader.updateProperty("educationStandardID", educationStandardID);
     }
 
     @Test(dependsOnMethods = "addEducation")
@@ -80,7 +76,7 @@ public class Education extends ParentPage {
         updateEducation.put("name", faker.name().fullName());
         updateEducation.put("description", faker.lorem().paragraph());
         updateEducation.put("schoolId", ConfigReader.getProperty("schoolID"));
-        updateEducation.put("gradeLevelId", ConfigReader.getProperty("gradeLevelId2"));
+        updateEducation.put("gradeLevelId", ConfigReader.getProperty("gradeLevelId"));
         updateEducation.put("subjectId", ConfigReader.getProperty("subjectId"));
         updateEducation.put("gradeCategoriesTemplateId", ConfigReader.getProperty("gradeCategoriesTemplateId"));
         updateEducation.put("gradeCategoryId", ConfigReader.getProperty("gradeCategoryId"));

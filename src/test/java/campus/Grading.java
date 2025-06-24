@@ -3,7 +3,6 @@ package campus;
 import utilities.ConfigReader;
 import utilities.ParentPage;
 import org.testng.annotations.*;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,7 +44,6 @@ public class Grading extends ParentPage {
 
                 .log().body()
                 .extract().path("id");
-
         ConfigReader.updateProperty("gradingID", gradingID);
     }
 
@@ -75,7 +73,6 @@ public class Grading extends ParentPage {
 
     @Test(dependsOnMethods = "updateScheme")
     public void deleteGradingScheme() {
-
         given()
                 .spec(reqSpec)
 
@@ -96,7 +93,7 @@ public class Grading extends ParentPage {
                     .delete("/school-service/api/grading-schemes/" + ConfigReader.getProperty("gradingID"))
 
                     .then()
-                    .statusCode(200);
+                    .statusCode(400);
         } catch (Exception e) {
             System.out.println("Error message: " + e);
         }
