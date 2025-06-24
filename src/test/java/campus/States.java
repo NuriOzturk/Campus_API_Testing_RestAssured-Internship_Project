@@ -18,6 +18,7 @@ public class States extends ParentPage {
         createState.put("name", faker.address().state() + faker.number().digits(3));
         createState.put("shortName", faker.address().stateAbbr() + faker.number().digits(2));
 
+
         Map<String, String> countryId = new LinkedHashMap<>();
         countryId.put("id", ConfigReader.getProperty("countryID"));
 
