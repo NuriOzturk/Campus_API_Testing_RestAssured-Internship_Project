@@ -1,0 +1,2788 @@
+{
+	"info": {
+		"_postman_id": "b720eee1-f2a6-472c-ad66-485db683e0d5",
+		"name": "Campus API Testing Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44947201",
+		"_collection_link": "https://www.postman.com/zaferatakli/workspace/campus/collection/44947201-b720eee1-f2a6-472c-ad66-485db683e0d5?action=share&source=collection_link&creator=44947201"
+	},
+	"item": [
+		{
+			"name": "US-001 Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData).to.have.property(\"access_token\");\r",
+									"pm.environment.set(\"access_token\", jsonData.access_token);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/auth/login",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-002 Add a Country with a Province",
+			"item": [
+				{
+					"name": "Create Country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Country successfully added\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var json = pm.response.json();\r",
+									"    pm.environment.set(\"country_id\", json.id);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{$randomCountry}} - {{$randomInt}}\",\r\n  \"code\": \"{{$randomCountryCode}}\",\r\n  \"hasState\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/countries",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-101  State",
+			"item": [
+				{
+					"name": "Create State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var json = pm.response.json();\r",
+									"    pm.environment.set(\"state_id\", json.id);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{$randomStreetName}}\",\r\n  \"shortName\": \"{{$randomStreetName}} - {{$randomInt}}\",\r\n  \"country\": {\r\n    \"id\": \"{{country_id}}\"\r\n}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/states",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/states",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{state_id}}\",\r\n  \"name\": \"UpdatedTestState2025\",\r\n  \"shortName\": \"UTS25\",\r\n  \"country\": {\r\n    \"id\": \"{{country_id}}\"\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/states",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The state was successfully deleted\", function () {\r",
+									"    pm.expect(pm.response.code === 200 || pm.response.code === 204).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/states/{{state_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"states",
+								"{{state_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-102 City",
+			"item": [
+				{
+					"name": "Create City",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"\r",
+									"var json = pm.response.json();\r",
+									"pm.environment.set(\"city_id\", json.id);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{$randomCity}}\",\r\n  \"state\": {\r\n    \"id\": \"{{state_id}}\"\r\n  },\r\n  \"country\": {\r\n    \"id\": \"{{country_id}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/cities",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read City",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/cities",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read City with ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/cities/{{city_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"cities",
+								"{{city_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update City",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{city_id}}\",\r\n  \"name\": \"{{$randomLoremWord}} - {{$randomInt}}\",\r\n  \"state\": {\r\n    \"id\": \"{{state_id}}\"\r\n  },\r\n  \"country\": {\r\n    \"id\": \"{{country_id}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/cities",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "City",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The state was successfully deleted\", function () {\r",
+									"    pm.expect(pm.response.code === 200 || pm.response.code === 204).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/cities/{{city_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"cities",
+								"{{city_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-103 Entrance Exam",
+			"item": [
+				{
+					"name": "Create Exam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    const json = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"exam_id\", json.id);\r",
+									"    pm.environment.set(\"gradeLevel_id\", json.gradeLevel.id); \r",
+									"    pm.environment.set(\"academicPeriod_id\", json.academicPeriod);\r",
+									"    pm.environment.set(\"exam_name\", json.name); \r",
+									"    pm.environment.set(\"school_id\", json.school);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomLoremWords}}\",\r\n  \"type\": \"EXAM\",\r\n  \"translateName\": [],\r\n  \"school\": \"6576fd8f8af7ce488ac69b89\",\r\n  \"gradeLevel\": {\r\n    \"id\": \"657713978af7ce488ac6a632\"\r\n  },\r\n  \"academicPeriod\": \"6577022e8af7ce488ac69b96\",\r\n  \"active\": true,\r\n  \"description\": \"\",\r\n  \"note\": \"\",\r\n  \"agreementText\": \"\",\r\n  \"sendSMS\": false,\r\n  \"sms\": \"\",\r\n  \"sendEmailEnabled\": false,\r\n  \"emailMessage\": {\r\n    \"subject\": \"\",\r\n    \"content\": \"\"\r\n  },\r\n  \"registrationStartDate\": null,\r\n  \"registrationEndDate\": null,\r\n  \"paid\": false,\r\n  \"price\": 0,\r\n  \"bankAccount\": null,\r\n  \"sendEmailToRegistrar\": false,\r\n  \"registrarEmails\": [],\r\n  \"showDescFirst\": false,\r\n  \"showNoteFirst\": false,\r\n  \"noteEnabled\": false,\r\n  \"descEnabled\": false,\r\n  \"agreementEnabled\": false,\r\n  \"formTemplateId\": null,\r\n  \"documents\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/exams",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"exams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/exams/{{exam_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"exams",
+								"{{exam_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{exam_id}}\",\r\n  \"name\": \"{{exam_name}}\",\r\n  \"type\": \"EXAM\",\r\n  \"translateName\": [],\r\n  \"school\": \"6576fd8f8af7ce488ac69b89\",\r\n  \"gradeLevel\": {\r\n    \"id\": \"646cca8aacf2ee0d37c6d998\"\r\n  },\r\n  \"academicPeriod\": \"{{academicPeriod_id}}\",\r\n  \"active\": true,\r\n  \"description\": \"\",\r\n  \"note\": \"\",\r\n  \"agreementText\": \"\",\r\n  \"sendSMS\": false,\r\n  \"sms\": \"\",\r\n  \"sendEmailEnabled\": false,\r\n  \"emailMessage\": {\r\n    \"subject\": \"\",\r\n    \"content\": \"\"\r\n  },\r\n  \"registrationStartDate\": null,\r\n  \"registrationEndDate\": null,\r\n  \"paid\": false,\r\n  \"price\": 0,\r\n  \"bankAccount\": null,\r\n  \"sendEmailToRegistrar\": false,\r\n  \"registrarEmails\": [],\r\n  \"showDescFirst\": false,\r\n  \"showNoteFirst\": false,\r\n  \"noteEnabled\": false,\r\n  \"descEnabled\": false,\r\n  \"agreementEnabled\": false,\r\n  \"formTemplateId\": null,\r\n  \"documents\": [],\r\n  \"schoolId\": \"6576fd8f8af7ce488ac69b89\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/exams",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"exams"
+							]
+						},
+						"description": "## Update Exam Endpoint\n\nThis endpoint allows you to update the details of an existing exam identified by `exam_id`. The request is sent as an HTTP PUT method to the specified URL.\n\n### Request Body Parameters\n\nThe request body must be in JSON format and include the following parameters:\n\n- **name** (string): The name of the exam.\n    \n- **type** (string): The type of the exam, typically set to \"EXAM\".\n    \n- **translateName** (array): An array for translated names (if applicable).\n    \n- **school** (string): The ID of the school associated with the exam.\n    \n- **gradeLevel** (object): An object containing the ID of the grade level.\n    \n- **academicPeriod** (string): The ID of the academic period for the exam.\n    \n- **active** (boolean): Indicates if the exam is currently active.\n    \n- **description** (string): A description of the exam.\n    \n- **note** (string): Any additional notes related to the exam.\n    \n- **agreementText** (string): Text for any agreements related to the exam.\n    \n- **sendSMS** (boolean): Flag to indicate if SMS notifications should be sent.\n    \n- **sms** (string): The SMS content to be sent.\n    \n- **sendEmailEnabled** (boolean): Flag to indicate if email notifications should be sent.\n    \n- **emailMessage** (object): An object containing the subject and content of the email.\n    \n- **registrationStartDate** (string or null): The start date for registration.\n    \n- **registrationEndDate** (string or null): The end date for registration.\n    \n- **paid** (boolean): Indicates if the exam is paid.\n    \n- **price** (number): The price of the exam.\n    \n- **bankAccount** (string or null): The bank account information (if applicable).\n    \n- **sendEmailToRegistrar** (boolean): Flag to indicate if emails should be sent to the registrar.\n    \n- **registrarEmails** (array): An array of registrar email addresses.\n    \n- **showDescFirst** (boolean): Flag to indicate if the description should be shown first.\n    \n- **showNoteFirst** (boolean): Flag to indicate if the note should be shown first.\n    \n- **noteEnabled** (boolean): Indicates if notes are enabled.\n    \n- **descEnabled** (boolean): Indicates if descriptions are enabled.\n    \n- **agreementEnabled** (boolean): Indicates if agreements are enabled.\n    \n- **formTemplateId** (string or null): The ID of the form template (if applicable).\n    \n- **documents** (array): An array of documents associated with the exam.\n    \n- **schoolId** (string): The ID of the school.\n    \n\n### Response\n\nThe response will return a status code indicating the result of the request. A status code of **405 Method Not Allowed** indicates that the PUT method is not supported for the specified endpoint. The response body will contain a JSON object with the following fields:\n\n- **type** (string): A URI reference for the type of problem.\n    \n- **title** (string): A brief title describing the error.\n    \n- **status** (integer): The HTTP status code.\n    \n- **detail** (string): A detailed description of the error.\n    \n- **instance** (string): A URI reference that identifies the specific occurrence of the problem.\n    \n- **message** (string): A message providing more context about the error.\n    \n- **path** (string): The path of the request that caused the error.\n    \n\nMake sure to verify the method and the endpoint before sending the request to avoid receiving a 405 error."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exam With Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{exam_id}}\",\r\n  \"name\": \"{{$randomLoremWord}}\",\r\n  \"type\": \"EXAM\",\r\n  \"translateName\": [],\r\n  \"school\": \"6576fd8f8af7ce488ac69b89\",\r\n  \"gradeLevel\": {\r\n    \"id\": \"646cca8aacf2ee0d37c6d998\"\r\n  },\r\n  \"academicPeriod\": \"{{academicPeriod_id}}\",\r\n  \"active\": true,\r\n  \"description\": \"\",\r\n  \"note\": \"\",\r\n  \"agreementText\": \"\",\r\n  \"sendSMS\": false,\r\n  \"sms\": \"\",\r\n  \"sendEmailEnabled\": false,\r\n  \"emailMessage\": {\r\n    \"subject\": \"\",\r\n    \"content\": \"\"\r\n  },\r\n  \"registrationStartDate\": null,\r\n  \"registrationEndDate\": null,\r\n  \"paid\": false,\r\n  \"price\": 0,\r\n  \"bankAccount\": null,\r\n  \"sendEmailToRegistrar\": false,\r\n  \"registrarEmails\": [],\r\n  \"showDescFirst\": false,\r\n  \"showNoteFirst\": false,\r\n  \"noteEnabled\": false,\r\n  \"descEnabled\": false,\r\n  \"agreementEnabled\": false,\r\n  \"formTemplateId\": null,\r\n  \"documents\": [],\r\n  \"schoolId\": \"6576fd8f8af7ce488ac69b89\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/exams",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"exams"
+							]
+						},
+						"description": "## Update Exam Endpoint\n\nThis endpoint allows you to update the details of an existing exam identified by `exam_id`. The request is sent as an HTTP PUT method to the specified URL.\n\n### Request Body Parameters\n\nThe request body must be in JSON format and include the following parameters:\n\n- **name** (string): The name of the exam.\n    \n- **type** (string): The type of the exam, typically set to \"EXAM\".\n    \n- **translateName** (array): An array for translated names (if applicable).\n    \n- **school** (string): The ID of the school associated with the exam.\n    \n- **gradeLevel** (object): An object containing the ID of the grade level.\n    \n- **academicPeriod** (string): The ID of the academic period for the exam.\n    \n- **active** (boolean): Indicates if the exam is currently active.\n    \n- **description** (string): A description of the exam.\n    \n- **note** (string): Any additional notes related to the exam.\n    \n- **agreementText** (string): Text for any agreements related to the exam.\n    \n- **sendSMS** (boolean): Flag to indicate if SMS notifications should be sent.\n    \n- **sms** (string): The SMS content to be sent.\n    \n- **sendEmailEnabled** (boolean): Flag to indicate if email notifications should be sent.\n    \n- **emailMessage** (object): An object containing the subject and content of the email.\n    \n- **registrationStartDate** (string or null): The start date for registration.\n    \n- **registrationEndDate** (string or null): The end date for registration.\n    \n- **paid** (boolean): Indicates if the exam is paid.\n    \n- **price** (number): The price of the exam.\n    \n- **bankAccount** (string or null): The bank account information (if applicable).\n    \n- **sendEmailToRegistrar** (boolean): Flag to indicate if emails should be sent to the registrar.\n    \n- **registrarEmails** (array): An array of registrar email addresses.\n    \n- **showDescFirst** (boolean): Flag to indicate if the description should be shown first.\n    \n- **showNoteFirst** (boolean): Flag to indicate if the note should be shown first.\n    \n- **noteEnabled** (boolean): Indicates if notes are enabled.\n    \n- **descEnabled** (boolean): Indicates if descriptions are enabled.\n    \n- **agreementEnabled** (boolean): Indicates if agreements are enabled.\n    \n- **formTemplateId** (string or null): The ID of the form template (if applicable).\n    \n- **documents** (array): An array of documents associated with the exam.\n    \n- **schoolId** (string): The ID of the school.\n    \n\n### Response\n\nThe response will return a status code indicating the result of the request. A status code of **405 Method Not Allowed** indicates that the PUT method is not supported for the specified endpoint. The response body will contain a JSON object with the following fields:\n\n- **type** (string): A URI reference for the type of problem.\n    \n- **title** (string): A brief title describing the error.\n    \n- **status** (integer): The HTTP status code.\n    \n- **detail** (string): A detailed description of the error.\n    \n- **instance** (string): A URI reference that identifies the specific occurrence of the problem.\n    \n- **message** (string): A message providing more context about the error.\n    \n- **path** (string): The path of the request that caused the error.\n    \n\nMake sure to verify the method and the endpoint before sending the request to avoid receiving a 405 error."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Exam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The state was successfully deleted\", function () {\r",
+									"    pm.expect(pm.response.code === 200 || pm.response.code === 204).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/exams/{{exam_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"exams",
+								"{{exam_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-104",
+			"item": []
+		},
+		{
+			"name": "US-105",
+			"item": [
+				{
+					"name": "Create Student Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.environment.set(\"student_group_id\", json.id);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": null,\r\n    \"schoolId\": \"{{school_id}}\",\r\n    \"name\": \"{{$randomJobType}}\",\r\n    \"description\": \"{{$randomLoremParagraph}}\",\r\n    \"active\": true,\r\n    \"publicGroup\": true,\r\n    \"showToStudent\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"     var json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"updateName\", name);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{student_group_id}}\",\r\n  \"schoolId\":\"{{school_id}}\",\r\n  \"name\": \"{{$randomJobType}}\",\r\n  \"description\": \"Yeni açıklama: Yazılım ve robotik meraklıları için grup.\",\r\n  \"active\": false,\r\n  \"publicGroup\": false,\r\n  \"visibilityToStudent\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Group exists and is returned\", function () {\r",
+									"    pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"student_group_id\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group/{{student_group_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group",
+								"{{student_group_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Student Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The state was successfully deleted\", function () {\r",
+									"    pm.expect(pm.response.code === 200 || pm.response.code === 204).to.be.true;\r",
+									"    pm.expect(pm.response.text()).to.eql(\"\")\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group/{{student_group_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group",
+								"{{student_group_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Student Group With Deleted Student Group Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group/{{student_group_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group",
+								"{{student_group_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-106",
+			"item": [
+				{
+					"name": "GET Student ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"let json = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"student1\", json.studentPoints[0].id);\r",
+									"pm.environment.set(\"student2\", json.studentPoints[1].id);\r",
+									"pm.environment.set(\"student3\", json.studentPoints[2].id);\r",
+									"pm.environment.set(\"student4\", json.studentPoints[3].id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident/school/{{school_id}}/class/65770d9b8af7ce488ac69bb6/student-points",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident",
+								"school",
+								"{{school_id}}",
+								"class",
+								"65770d9b8af7ce488ac69bb6",
+								"student-points"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Students",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  \"{{student1}}\",\r\n  \"{{student2}}\",\r\n  \"{{student3}}\",\r\n  \"{{student4}}\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group/{{student_group_id}}/add-students?page=0&size=10",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group",
+								"{{student_group_id}}",
+								"add-students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Verify Student Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let body = pm.response.json();\r",
+									"let studentList = body.content.map(x => x.id);\r",
+									"\r",
+									"pm.test(\"Status 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Student1 grupta var\", function () {\r",
+									"    pm.expect(studentList).to.include(pm.environment.get(\"student1\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Student2 grupta var\", function () {\r",
+									"    pm.expect(studentList).to.include(pm.environment.get(\"student2\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Student3 grupta var\", function () {\r",
+									"    pm.expect(studentList).to.include(pm.environment.get(\"student3\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Student4 grupta var\", function () {\r",
+									"    pm.expect(studentList).to.include(pm.environment.get(\"student4\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/students/group/{{student_group_id}}?page=0&size=10",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"students",
+								"group",
+								"{{student_group_id}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-107",
+			"item": [
+				{
+					"name": "Remove Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  \"{{student1}}\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/student-group/{{student_group_id}}/remove-students?page=0&size=10",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"student-group",
+								"{{student_group_id}}",
+								"remove-students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Removed Student Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let body = pm.response.json();\r",
+									"let studentList = body.content.map(x => x.id);\r",
+									"\r",
+									"pm.test(\"Silinen öğrenci artık grupta olmamalı\", function () {\r",
+									"    pm.expect(studentList).to.not.include(pm.environment.get(\"student1\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/students/group/{{student_group_id}}?page=0&size=10",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"students",
+								"group",
+								"{{student_group_id}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-108",
+			"item": [
+				{
+					"name": "GET Education Standart List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 Created\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"let json = pm.response.json();\r",
+									"pm.environment.set(\"eduStandardID\", json.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"Math Standard A\",\r\n  \"description\": \"Advanced Math Description\",\r\n  \"schoolId\": \"{{school_id}}\",\r\n  \"gradeLevelId\": \"{{gradeLevel_id}}\",\r\n  \"subjectId\": \"646ccc7eacf2ee0d37c6d9ab\",\r\n  \"gradeCategoriesTemplateId\": \"657707e18af7ce488ac69ba9\",\r\n  \"gradeCategoryId\": \"59ef-d8ab\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/subjects/646cb816433c0f46e7d44cb0/tenant/{{school_id}}/school/keyvalue",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"subjects",
+								"646cb816433c0f46e7d44cb0",
+								"tenant",
+								"{{school_id}}",
+								"school",
+								"keyvalue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Education Standard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"let json = pm.response.json();\r",
+									"pm.environment.set(\"eduStandardID\", json.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"Math Standard A\",\r\n  \"description\": \"Advanced Math Description\",\r\n  \"schoolId\": \"{{school_id}}\",\r\n  \"gradeLevelId\": \"{{gradeLevel_id}}\",\r\n  \"subjectId\": \"646ccc7eacf2ee0d37c6d9ab\",\r\n  \"gradeCategoriesTemplateId\": \"657707e18af7ce488ac69ba9\",\r\n  \"gradeCategoryId\": \"59ef-d8ab\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/education-standard",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"education-standard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Education",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{eduStandardID}}\",\r\n    \"name\": \"zafer\",\r\n    \"description\": \"qwdsadadad\",\r\n    \"gradeLevelId\": \"{{gradeLevel_id}}\",\r\n    \"subjectId\": \"{{subjectId}}\",\r\n    \"gradeCategoriesTemplateId\": \"657707e18af7ce488ac69ba9\",\r\n    \"gradeCategoryId\": \"59ef-d8ab\",\r\n    \"calculationMode\": \"MEAN\",\r\n    \"numberOfScores\": 5,\r\n    \"scoreWeights\": [\r\n        1,\r\n        1,\r\n        1,\r\n        1,\r\n        1\r\n    ],\r\n    \"parentStandardCalculationStarategy\": \"TURN_OFF\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/education-standard",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"education-standard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Education Standard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/education-standard/{{eduStandardID}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"education-standard",
+								"{{eduStandardID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Education Standard List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/education-standard/school/{{school_id}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"education-standard",
+								"school",
+								"{{school_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Subject ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json = pm.response.json();\r",
+									"pm.environment.set(\"subjectId\", json[0].id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/subject-categories",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"subject-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ES With ED ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/education_standard/{{eduStandardID}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"education_standard",
+								"{{eduStandardID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-109",
+			"item": [
+				{
+					"name": "GET Grading",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/grading-schemes/tenant/646cb816433c0f46e7d44cb0/search",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"grading-schemes",
+								"tenant",
+								"646cb816433c0f46e7d44cb0",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Grading",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var json = pm.response.json();\r",
+									"pm.environment.set(\"gradingId\", json.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n        \"id\": null,    \r\n        \"name\": \"{{$randomLoremWord}}\",\r\n        \"active\": true,\r\n        \"tenantId\": \"{{tenantId}}\",\r\n        \"gradeRanges\": [],\r\n        \"type\": \"POINT\",\r\n        \"enablePoint\": false\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/grading-schemes",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"grading-schemes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Grading",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n        \"id\": \"{{gradingId}}\",\r\n        \"name\": \"{{$randomLoremWord}}\",\r\n        \"active\": false,\r\n        \"tenantId\": \"{{tenantId}}\",\r\n        \"gradeRanges\": [],\r\n        \"type\": \"POINT\",\r\n        \"enablePoint\": false,\r\n        \"minPointToPass\": {{$randomInt}},\r\n        \"revisionId\": \"4028f0b1-5125-11f0-b2cb-0242ac190007\",\r\n        \"changedDate\": \"2025-06-24T18:01:28.057\",\r\n        \"changedBy\": \"turkeyts\",\r\n        \"createdDate\": \"2025-06-24T18:01:28.055\",\r\n        \"createdBy\": \"turkeyts\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/grading-schemes",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"grading-schemes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Grading",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/grading-schemes/{{gradingId}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"grading-schemes",
+								"{{gradingId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Grading Ngative",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/grading-schemes/{{gradingId}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"grading-schemes",
+								"{{gradingId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "US-110",
+			"item": [
+				{
+					"name": "GET Incident",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tenantId\": \"646cb816433c0f46e7d44cb0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident-type/search",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident-type",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Incident",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var json = pm.response.json();\r",
+									"pm.environment.set(\"incidentID\", json.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": null,\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"active\": true,\r\n    \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n    \"minPoint\": 0,\r\n    \"maxPoint\": {{$randomInt}},\r\n    \"academicBased\": false,\r\n    \"permissions\": [\r\n        \"ROLE_ADMIN\"\r\n    ],\r\n    \"notifyWithEmail\": false,\r\n    \"notifyWithMessage\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident-type",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident-type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Incident",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{incidentID}}\",\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"active\": true,\r\n    \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n    \"minPoint\": 0,\r\n    \"maxPoint\": 15,\r\n    \"academicBased\": false,\r\n    \"permissions\": [\r\n        \"ROLE_ADMIN\"\r\n    ],\r\n    \"notifyWithEmail\": false,\r\n    \"notifyWithMessage\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident-type",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident-type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELIncident",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident-type/{{incidentID}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident-type",
+								"{{incidentID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL Incident Negative",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{CampusURL}}/school-service/api/incident-type/{{incidentID}}",
+							"host": [
+								"{{CampusURL}}"
+							],
+							"path": [
+								"school-service",
+								"api",
+								"incident-type",
+								"{{incidentID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response time is less than 3000ms\", function () {\r",
+					"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tenantId",
+			"value": "646cb816433c0f46e7d44cb0",
+			"type": "string"
+		}
+	]
+}

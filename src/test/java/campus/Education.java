@@ -5,10 +5,8 @@ import io.restassured.response.Response;
 import utilities.ConfigReader;
 import utilities.ParentPage;
 import org.testng.annotations.*;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
 public class Education extends ParentPage {
@@ -35,7 +33,6 @@ public class Education extends ParentPage {
         response.then().statusCode(200).log().body();
         JsonPath jsonPath = response.jsonPath();
         education1 = jsonPath.getString("[0].id");
-
         ConfigReader.updateProperty("educationID", education1);
     }
 

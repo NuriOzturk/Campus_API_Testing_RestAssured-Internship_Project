@@ -3,10 +3,8 @@ package campus;
 import utilities.ConfigReader;
 import utilities.ParentPage;
 import org.testng.annotations.*;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import static io.restassured.RestAssured.*;
 
 public class Country extends ParentPage {
