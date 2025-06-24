@@ -58,6 +58,10 @@ public class ConfigReader {
                 String student4 = id;
                 properties.setProperty(keyword, student4);
                 break;
+            case "student5":
+                String student5 = id;
+                properties.setProperty(keyword, student5);
+                break;
             case "gradingID":
                 String gradingID = id;
                 properties.setProperty(keyword, gradingID);
@@ -83,8 +87,12 @@ public class ConfigReader {
                 properties.setProperty(keyword, schoolID);
                 break;
             case "examID":
-                String examID= id;
-                properties.setProperty(keyword,examID);
+                String examID = id;
+                properties.setProperty(keyword, examID);
+                break;
+            case "classID":
+                String classID = id;
+                properties.setProperty(keyword, classID);
                 break;
         }
 
