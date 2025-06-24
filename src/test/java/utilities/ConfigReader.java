@@ -70,9 +70,9 @@ public class ConfigReader {
                 String educationID = id;
                 properties.setProperty(keyword, educationID);
                 break;
-            case "javaID":
-                String javaID = id;
-                properties.setProperty(keyword, javaID);
+            case "educationStandardID":
+                String educationStandardID = id;
+                properties.setProperty(keyword, educationStandardID);
                 break;
             case "incidentID":
                 String incidentID = id;
