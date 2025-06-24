@@ -76,7 +76,7 @@ public class Education extends ParentPage {
     public void updateEducation() {
         Map<String, Object> updateEducation = new LinkedHashMap<>();
 
-        updateEducation.put("id", ConfigReader.getProperty("educationStandartID"));
+        updateEducation.put("id", ConfigReader.getProperty("educationStandardID"));
         updateEducation.put("name", faker.name().fullName());
         updateEducation.put("description", faker.lorem().paragraph());
         updateEducation.put("schoolId", ConfigReader.getProperty("schoolID"));
@@ -103,7 +103,7 @@ public class Education extends ParentPage {
         given()
                 .spec(reqSpec)
                 .when()
-                .delete("/school-service/api/education-standard/" + ConfigReader.getProperty("educationStandartID"))
+                .delete("/school-service/api/education-standard/" + ConfigReader.getProperty("educationStandardID"))
                 .then()
                 .statusCode(204);
     }
